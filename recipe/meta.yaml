@@ -1,31 +1,35 @@
 {% set name = "xmlrunner" %}
 {% set version = "1.7.7" %}
-{% set sha256 = "5a6113d049eca7646111ee657266966e5bbfb0b5ceb2e83ee0772e16d7110f39" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  fn: {{ name }}-{{ version }}.tar.gz
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: {{ sha256 }}
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/xmlrunner-{{ version }}.tar.gz
+  sha256: 5a6113d049eca7646111ee657266966e5bbfb0b5ceb2e83ee0772e16d7110f39
 
 build:
-  number: 0
-  script: python setup.py install --single-version-externally-managed --record record.txt
+  number: 1
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   noarch: python
 
 requirements:
-  build:
-    - python
+  host:
+    - python {{ python_min }}
     - setuptools
+    - pip
   run:
-    - python
+    - python >={{ python_min }}
 
 test:
+  requires:
+    - python {{ python_min }}
+    - pip
   imports:
     - xmlrunner
+  commands:
+    - pip check
 
 about:
   home: https://github.com/pycontribs/xmlrunner
